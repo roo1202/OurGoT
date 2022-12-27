@@ -1,0 +1,9 @@
+Name=Farm
+Life=100
+Cost=20
+Attack=0
+Defense=0
+Range=0
+Description= 1 - This unit cannot move, it produces 25 coins
+Powers=Trade(25)|
+Conditions = MyMoney > 20 | Farm.Life > 70 |

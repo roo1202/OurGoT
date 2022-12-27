@@ -1,0 +1,9 @@
+Name=Money_Adviser
+Life=50
+Cost=10
+Attack=0
+Defense=0
+Range=1
+Description= 1 - Gives you 10 coins and takes 15 coins to enemy
+Powers=Trade(15)Trade(-15)|
+Conditions = MyMoney > 10 | 1 |

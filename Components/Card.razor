@@ -1,0 +1,38 @@
+﻿<div class ="Card @CardModel.Style @Card_Show @STYLE"  @onmouseover="Show">
+    <img src=@CardModel.card.Picture class = "Picture" >
+    <div style="color:white">
+    <b> @CardModel.card.Name &nbsp; Life:@CardModel.card.Life <br/></b>
+    <b>Attack: @CardModel.card.Attack &nbsp; Defense: @CardModel.card.Defense <br></b>
+    <b>Range: @CardModel.card.Range  &nbsp; Cost: @CardModel.card.Cost<br></b>
+    <b>@CardModel.card.Description </b>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public EventCallback OnMouseUp{ get; set; }
+    [Parameter]
+    public CardModel CardModel { get; set; }
+    [Parameter]
+    public string STYLE { get; set; }
+    private bool resize { get; set; }
+    public string Card_Show = "Card-Show";
+    [Parameter]
+    public bool Resize 
+    {
+        get => resize;
+        set
+        {
+            resize = value;
+            if (value)
+                Card_Show = "Card-Show";
+            else
+                Card_Show = "";
+        }
+    }
+    
+
+    private void Show()
+    {
+        OnMouseUp.InvokeAsync(new EventArgs());
+    }
+}

@@ -1,0 +1,64 @@
+﻿@using OurGoT.Pages
+@page "/"
+
+
+<p class = "Head"> Game of Thrones </p>
+<div class="Menu">
+<h3>Choose Players</h3>
+<select @bind = "players">
+<option value = "human">Human</option>
+<option value = "virtual">Virtual</option>
+</select>
+
+@if(players=="human")
+{
+    <input @bind-value = "name">
+}
+
+<button @onclick = "Players">
+    Select
+</button>
+
+@if(Play.Player1.Name != "")
+{
+    <p>Player @Play.Player1.Name saved </p>
+}
+@if(Play.Player2.Name != "")
+{
+    <p>Player @Play.Player2.Name saved </p>
+}
+@if(Play.Player1.Name != "" && Play.Player2.Name != "")
+    {
+        <a class = "fcc-btn" href="/Play">
+        Play
+        </a>
+    }
+
+</div>
+
+@code
+{
+    public string players="" ;
+    public string name = "";
+
+    public void Players()
+    {
+        string [] Playeres = {"Robert_Barathyon","Daenerys","Cersei","Joffrey","Thom","Jon_Snow"};
+        
+        if(Play.Player1.Name == "")
+        {
+            if(players=="human") Play.Player1 = new Player(name);
+            else Play.Player1 = new VirtualPlayer(Playeres[Methods.GetRandom(0,Playeres.Length-1)]);
+        }
+        else
+        {
+            if(players=="human") Play.Player2 = new Player(name);
+            else
+            {
+                do{
+                Play.Player2 = new VirtualPlayer(Playeres[Methods.GetRandom(0,Playeres.Length-1)]);
+                }while(Play.Player2.Name == Play.Player1.Name);
+            }
+        }
+    }
+}

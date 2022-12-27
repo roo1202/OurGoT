@@ -1,0 +1,9 @@
+Name=Archers
+Life=200
+Cost=17
+Attack=40
+Defense=10
+Range=3
+Description= 1- To Attack 2 - Shoots fire arrows to enemies
+Powers=ToAttack | UpAttack(10) ToAttack UpAttack(-10)|
+Conditions = MyMoney > 17 | 1 | Archers.Life > 190 |

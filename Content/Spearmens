@@ -1,0 +1,9 @@
+Name=Spearmens
+Life=200
+Cost=15
+Attack=35
+Defense=15
+Range=2
+Description= 1 - To Attack
+Powers=ToAttack|
+Conditions=MyMoney>15|1|

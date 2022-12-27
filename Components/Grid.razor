@@ -1,0 +1,14 @@
+﻿<div class = "Grid" @onmouseover="Show">
+    <img src=@GridModel.Card.Picture class="Picture_Grid @GridModel.Style">
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback OnMouseUp{ get; set; }
+    [Parameter]
+    public GridModel GridModel{ get; set; }
+    private void Show()
+    {
+        OnMouseUp.InvokeAsync(new EventArgs());
+    }
+}

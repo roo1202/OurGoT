@@ -1,0 +1,9 @@
+Name=Gigant
+Life=700
+Cost=100
+Attack=80
+Defense=30
+Range=2
+Description= 1 - ToAttack 2 - He increasies his Attack and Defense when Gigant is on field
+Powers=ToAttack|UpAttack(20)UpDefense(20)|
+Conditions = MyMoney > 100 | 1 | Mamuts.Posx > -1 && Gigant.Attack < 100|

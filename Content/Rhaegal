@@ -1,0 +1,9 @@
+Name=Rhaegal
+Life=1300
+Cost=470
+Attack=260
+Defense=75
+Range=5
+Description = 1 - To Attack 2 - He ravens an enemie's unit
+Powers= ToAttack | UpAttack(500) ToAttack UpAttack(-500)|
+Conditions = MyMoney > 470 | 1 | Rhaegal.Life == 1300 |

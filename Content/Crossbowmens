@@ -1,0 +1,9 @@
+Name=Crossbowmens
+Life=150
+Cost=15
+Attack=35
+Defense=10
+Range=1
+Description=Just attack
+Powers=ToAttack|
+Conditions = MyMoney > 15 | 1 |

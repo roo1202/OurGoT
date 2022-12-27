@@ -1,0 +1,9 @@
+Name=Mamuts
+Life=600
+Cost=100
+Attack=80
+Defense=25
+Range=2
+Description= 1 - To Attack 2 - He increasies his Attack and Defense on 20 when The Gigant is on the field
+Powers=ToAttack|UpAttack(20)UpDefense(20)|
+Conditions = MyMoney > 100 | 1 | Gigant.Posx > -1 && Mamuts.Attack < 100 |

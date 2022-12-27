@@ -1,0 +1,10 @@
+Name=Trainer
+Attack=20
+Defense=20
+Cost=50
+Range=2
+Life=100
+Description=1-He can attack two enemies 2 - He trains all allies on his range
+Powers= Repeat(ToAttack,2) | Repeat(UpAttack(5)UpDefense(5)UpRange(1),MyCamp)|
+Conditions = MyMoney > 20 | Trainer.Life > 50 | Trainer.Life == 100|
+Picture = ../Img/Card1.jpg

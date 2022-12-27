@@ -1,0 +1,9 @@
+Name=Drogo
+Life=1500
+Cost=450
+Attack=270
+Defense=80
+Range=5
+Description= 1 - To attack 2 - He ravens an enemie's unit
+Powers = ToAttack | UpAttack(500) ToAttack UpAttack(-500)|
+Conditions = MyMoney > 450 | 1 | Drogo.Life == 1500 |

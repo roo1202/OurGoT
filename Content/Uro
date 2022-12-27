@@ -1,0 +1,10 @@
+Name = Uro
+Life = 200
+Cost = 30
+Description = 1 - Attack all enemies on his range 2 - Upgrade Uro's Attack and Defense
+Range = 2
+Attack = 5
+Defense = 5
+Powers = Repeat(ToAttack,YourCamp) | UpAttack(MyCamp*7) UpDefense(MyCamp*6)|
+Conditions = MyMoney > 30 | Uro.Life > 175 | Uro.Attack == 5 |
+Picture = ../Img/Card2.jpg

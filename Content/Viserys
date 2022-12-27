@@ -1,0 +1,10 @@
+Name = Viserys
+Life = 1000
+Cost = 450
+Attack = 250
+Defense = 60
+Range = 5
+Description = 1 - To Attack 2 - He raven an enemie's unit
+Powers = ToAttack | UpAttack(500) ToAttack UpAttack(-500) |
+Conditions = MyMoney > 450 | 1 | Viserys.Life == 1000 |
+Picture = ../Img/Card3.jpg
