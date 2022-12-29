@@ -1,0 +1,35 @@
+﻿@page "/CreateCard"
+<h3>CreateCard</h3>
+<input placeholder = "Name" @bind = "@Name"/>
+<textarea style = "width=200 hight=200" placeholder = "Text" @bind = "@Text"/>
+<button @onclick = "ToSave">Save</button>
+
+@if(OnCheck)
+{
+    @if(Errors.Count() != 0)
+{
+    <span>There is some issues on creation</span>
+    @foreach(var x in Errors)
+    {
+        <span>@x <br /> </span>
+    }
+}
+else
+{
+    <span>Creation succesful</span>
+}
+}
+
+
+@code {
+    public string Name = "";
+    public string Text = "";
+    public List<String> Errors = new List<string>();
+    public bool OnCheck = false;
+
+    public void ToSave()
+    {
+        Errors = Deck.CreateCard(Name, Text);
+        OnCheck = true;
+    }
+}

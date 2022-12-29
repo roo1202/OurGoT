@@ -1,0 +1,10 @@
+Name = Gigant_Spider
+Life = 300
+Attack = 60
+Defense = 20
+Cost = 50
+Range = 1
+Description = 1-Attack 2-Poison an enemy unit for 2 turns
+Powers = ToAttack | During ( Heal(-10) , 2 ) |
+Conditions = MyMoney > 50 | 1 | Gigant_Spider.Life > 250 |
+Picture = ../Img/arannaGigante.jpg

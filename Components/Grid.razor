@@ -1,14 +1,39 @@
-﻿<div class = "Grid" @onmouseover="Show">
+﻿<div class = "Grid @GridModel.Site" @onmouseover="Show" @ondblclick="SelectCardAction" @onclick="Select" @onmouseup="Move" @onmousedown="Invoke">
     <img src=@GridModel.Card.Picture class="Picture_Grid @GridModel.Style">
 </div>
 
 @code {
     [Parameter]
-    public EventCallback OnMouseUp{ get; set; }
+    public EventCallback OnMouseOver{ get; set; }
     [Parameter]
     public GridModel GridModel{ get; set; }
+    [Parameter]
+    public EventCallback OnMouseDClick{ get; set; }
+    [Parameter]
+    public EventCallback OnMouseClick{ get; set; }
+    [Parameter]
+    public EventCallback OnMouseUp{get;set;}
+    [Parameter]
+    public EventCallback OnMouseDown{ get; set; }
+
     private void Show()
     {
+        OnMouseOver.InvokeAsync(new EventArgs());
+    }
+    private void Invoke()
+    {
+        OnMouseDown.InvokeAsync(new EventArgs());
+    }
+    private void Select()
+    {
+        OnMouseClick.InvokeAsync(new EventArgs());
+    }
+    private void Move()
+    {
         OnMouseUp.InvokeAsync(new EventArgs());
+    }
+    private void SelectCardAction()
+    {
+        OnMouseDClick.InvokeAsync(new EventArgs());
     }
 }

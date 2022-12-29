@@ -7,3 +7,4 @@ Range=3
 Description= 1- To Attack 2 - Shoots fire arrows to enemies
 Powers=ToAttack | UpAttack(10) ToAttack UpAttack(-10)|
 Conditions = MyMoney > 17 | 1 | Archers.Life > 190 |
+Picture = ../Img/arque.jpg

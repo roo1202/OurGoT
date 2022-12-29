@@ -8,6 +8,7 @@
         public Card Card { get; set; }
         private bool isInvisible { get; set; }
         public string Style { get; set; }
+        public string Site { get; set; }
         public bool IsInvisible 
         { 
             get => isInvisible; 

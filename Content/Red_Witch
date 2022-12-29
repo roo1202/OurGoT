@@ -7,3 +7,4 @@ Range=1
 Description=1-Heal 10 to an allies unit 2-She sacrifices herself to revives an allies unit
 Powers=Heal(10)| Sacrifice |
 Conditions = MyMoney > 5 | Red_Witch.Life == 25 | 1 |
+Picture = ../Img/brujaroja.jpg

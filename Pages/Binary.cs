@@ -12,7 +12,9 @@
 
         public int Evaluate()
         {
+           
             int result1 = expression1.Evaluate();
+           
             int result2 = expression2.Evaluate();
             return this.Evaluate(result1, result2);
         }

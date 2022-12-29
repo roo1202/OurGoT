@@ -15,6 +15,8 @@
         public int Posy;
         public List<Expression> Powers = new List<Expression>();
         public List<Expression> Conditions = new List<Expression>();
+        public bool Moved = false;
+        public List<bool> Used = new List<bool>(); 
         public Card()
         {
             Name = Description = Picture = "*";
@@ -26,6 +28,8 @@
             Powers.Add(new Constant(0));
             Conditions = new List<Expression>();
             Conditions.Add(new Constant(0));
+            Used.Add(false);
+            Picture = "../Img/Empty.jpg";
         }
 
         public Card(string n, int v, int cos, int def, int a, string d, string f, int al, List<Expression> p, List<Expression> c)
@@ -41,6 +45,9 @@
             Powers = p;
             Conditions = c;
             Posx = Posy = -1;
+            Used = new List<bool>();
+            for (int i = 0; i < p.Count; i++)
+                Used.Add(false);
         }
 
         public void ReadCard()

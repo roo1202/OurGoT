@@ -7,3 +7,4 @@ Range=0
 Description= 1 - This unit cannot move, it produces 25 coins
 Powers=Trade(25)|
 Conditions = MyMoney > 20 | Farm.Life > 70 |
+Picture = ../Img/farm.jpg

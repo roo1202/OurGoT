@@ -1,4 +1,4 @@
-﻿<div class ="Card @CardModel.Style @Card_Show @STYLE"  @onmouseover="Show">
+﻿<div class ="Card @CardModel.Style @Card_Show @STYLE"  @onmouseover="Show" @onclick="Select">
     <img src=@CardModel.card.Picture class = "Picture" >
     <div style="color:white">
     <b> @CardModel.card.Name &nbsp; Life:@CardModel.card.Life <br/></b>
@@ -9,7 +9,9 @@
 </div>
 @code {
     [Parameter]
-    public EventCallback OnMouseUp{ get; set; }
+    public EventCallback OnMouseOver{ get; set; }
+    [Parameter]
+    public EventCallback OnMouseClick { get; set; }
     [Parameter]
     public CardModel CardModel { get; set; }
     [Parameter]
@@ -29,10 +31,14 @@
                 Card_Show = "";
         }
     }
-    
+
 
     private void Show()
     {
-        OnMouseUp.InvokeAsync(new EventArgs());
+        OnMouseOver.InvokeAsync(new EventArgs());
+    }
+    private void Select()
+    {
+        OnMouseClick.InvokeAsync(new EventArgs());
     }
 }

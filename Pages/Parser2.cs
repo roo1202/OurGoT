@@ -141,6 +141,7 @@
                         }
                         if (value[POS].Type == "Action1")
                         {
+                            
                             switch (value[POS].Value)
                             {
                                 case "Heal":
@@ -194,7 +195,15 @@
                                 power = new Repetition(aux[0], Calculate(Second).Evaluate());
                         }
                     }
-                    Aux = new And(Aux, power);
+                    
+                    Aux = new And(Aux,power);
+                   if(card.Name == "Drogo")
+                    {
+                        Console.WriteLine(value[POS].Value);
+                       // Aux.Evaluate();
+                        Console.WriteLine("HERE");
+
+                    }
                 }
                 pos++;
             }
@@ -285,6 +294,10 @@
                             List<Expression> Powers = CutPowers(value);
                             Powers.Insert(0, new Constant(0));
                             card.Powers = Powers;
+                            for(int i = 1; i < Powers.Count; i++)
+                            {
+                                card.Used.Add(false);
+                            }
                         }
                         else
                         {

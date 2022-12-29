@@ -14,31 +14,71 @@
 
 }
 html {
-    background-image: url("../Img/Background.jpg");
+    background-image: url("../Img/inicio.jpg");
     background-repeat:no-repeat;
     background-size:1650px;
     background-position:center;
     background-attachment:fixed;
 }
 .Head {
-    animation-duration: 5s;
+    animation-duration: 3s;
     animation-name: slidein;
     font-size: 100px;
     text-align: center;
     color: red;
+    border-radius:5px;
+    height:300px;
+    width:500px;
+    opacity:0.9;
+    align-content:center;
+    position:relative;
+    left:550px;
+    z-index:1;
 }
+.Right
+{
+    position:relative;
+    left:100px;
+}
+.Down
+{
+    position:relative;
+    up:100px;
+}
+.Up
+{
+    position:absolute;
+    top:-10px;
+    text-align:center
 
+}
+.UP {
+    position: relative;
+    top: -950px;
+}
+.btn
+{
+    left:400px;
+    height:50px;
+    width:70px;
+    background-image:url("../Img/button.jpg");
+    background-position:center;
+    background-size:80px;
+    border-radius:60px;
+    color: floralwhite;
+}
 @keyframes slidein
 {
     from
     {
         margin-top:100%;
-        height:300%;
+        height:0%;
+        width:0%;
     }
-    to
-    {
-        margin-top:0%;
-        height:100%;
+    to {
+        margin-top: 0%;
+        height: 30%;
+        width: 30%;
     }
 }
 .Picture {
@@ -47,10 +87,10 @@ html {
     padding:3px;
     border-radius:10px;
 }
-.Left-Up
+.Right-Up
 {
     position : relative;
-    left :1450px;
+    left :1250px;
     top : -80px
 }
 .Menu
@@ -61,7 +101,7 @@ html {
 }
 .Card
 {
-    background-image:url("../Img/Card.jpg");
+    background-image:url("../Img/card3.jpg");
     background-size:130px 225px;
     background-position:center;
     font-size:xx-small;
@@ -91,8 +131,8 @@ html {
 .Hand
 {
     position:relative;
-    left:500px;
-    top:450px;
+    left:460px;
+    top:330px;
     display:flex;
     flex-flow:column wrap;
     align-content:center;
@@ -101,12 +141,12 @@ html {
     height:200px;
 }
 .Tab_Picture {
-    width:502px;
-    height:502px;
-    background-image: url("../Img/BattleField.jpg");
+    width:518px;
+    height:518px;
+    background-image: url("../Img/map1.jpg");
     background-position:center;
     background-repeat:no-repeat;
-    background-size:496px 496px;
+    background-size:517px 517px;
     opacity:0.8;
     border-radius: 10px;
     border-style:dotted;
@@ -115,28 +155,40 @@ html {
 .Tab {
     position: relative;
     left: 500px;
-    top: -300px;
+    top: -450px;
     border-radius: 5px;
     border-style: solid;
-    border-color: darkorange;
+    border-color: ghostwhite;
     display: flex;
     flex-flow: column wrap;
     align-content: center;
     justify-content: center;
-    width: 500px;
-    height: 500px;
+    width: 519px;
+    height: 519px;
 }
 .Picture_Grid {
     width: 45px;
     height: 45px;
     border-radius:5px;
 }
-.Grid {
-    width: 50px;
-    height: 50px;
+.Powers
+{
     position:relative;
-    left:3px;
-    top:3px;
+    top:100px;
+}
+.Ally
+{
+    background-color:rgb(0, 36, 255, 0.65);
+}
+.Enemy
+{
+    background-color:rgb(255, 0, 0, 0.70);
+}
+.Grid {
+    width: 45px;
+    height: 45px;
+    border-color:#86620899;
+    border-style:ridge;
 }
 .Invisible{
     opacity:0;

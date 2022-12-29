@@ -7,3 +7,4 @@ Range=1
 Description= 1 - Heals an unit by 10 coins 2 - He can pay 5 coins to poison an unit by -10
 Powers=Heal(10)|Trade(-5) During ( Heal(-10) , 2) |
 Conditions = MyMoney > 5 | 1 | MyMoney > 5|
+Picture = ../Img/maestre.jpg

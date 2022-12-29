@@ -1,9 +1,10 @@
 Name=Chivalry
 Life=500
-Cost=50
+Cost=80
 Attack=100
 Defense=20
 Range=3
 Description= 1 - To Attack 2- Gives 20 to Chivalry's life but losses 15 of defense
 Powers=ToAttack | Heal(20) UpDefense(-15)|
 Conditions = MyMoney > 50 | 1 | Chivalry.Life < 500 && Chivalry.Defense > 15 |
+Picture = ../Img/caballeria.jpg

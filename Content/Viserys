@@ -7,4 +7,4 @@ Range = 5
 Description = 1 - To Attack 2 - He raven an enemie's unit
 Powers = ToAttack | UpAttack(500) ToAttack UpAttack(-500) |
 Conditions = MyMoney > 450 | 1 | Viserys.Life == 1000 |
-Picture = ../Img/Card3.jpg
+Picture = ../Img/viseryon.jpg

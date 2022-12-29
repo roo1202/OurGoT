@@ -7,3 +7,4 @@ Range=2
 Description= 1 - To Attack 2 - It increasies its attack by 20 coins
 Powers=ToAttack | UpAttack(30) ToAttack Trade(-20)|
 Conditions = MyMoney > 30 | 1 | MyMoney > 20 && Catapult.Attack < 110 |
+Picture = ../Img/catapulta.jpg

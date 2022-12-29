@@ -7,3 +7,4 @@ Range=1
 Description=Just attack
 Powers=ToAttack|
 Conditions = MyMoney > 15 | 1 |
+Picture = ../Img/ballestero.jpg

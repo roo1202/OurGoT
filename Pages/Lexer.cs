@@ -79,20 +79,25 @@
                 return true;
             return false;
         }
-        public void Read(string title)
+        public void Read(string title,string text)
         {
-            System.Console.WriteLine("IEnter the features of the card : ");
+            System.Console.WriteLine("Enter the features of the card : ");
             this.Title = title;
-            while (true)
+            this.Text = text;
+            int i = 0;
+            string line = "";
+            while (i < text.Length)
             {
-                string line = Console.ReadLine()!;
-                if (line == "end")
-                    break;
-
-                Text += line;
-                Asignations.Add(line);
-                Text += '\n';
+                line += text[i++];
+               
+                if(i < text.Length && text[i] == '\n')
+                {
+                    Asignations.Add(line);
+                    line = "";
+                    i++;
+                }
             }
+            Asignations.Add(line);
             Tokens = ToToken(Asignations, Title);
         }
         public static List<List<Token>> ToToken(List<string> Asignations, string Title)

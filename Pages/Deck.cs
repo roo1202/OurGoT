@@ -2,26 +2,24 @@
 {
     public class Deck
     {
-        public static Card CreateCard()
+        public static List<string> CreateCard(string Title,string Text)
         {
             System.Console.WriteLine("Enter the name of the Card");
-            string Title;
-            Title = Console.ReadLine()!;
             Lexer lexer = new Lexer();
-            lexer.Read(Title);
+            lexer.Read(Title,Text);
             lexer.Check();
             if (lexer.Errors.Count() == 0)
             {
                 Parser2 parser2 = new Parser2(Title, lexer.Tokens);
                 Save(Title, lexer.Text);
-                return parser2.card;
+                return new List<string>();
             }
             else
             {
                 foreach (var x in lexer.Errors)
                     System.Console.WriteLine(x);
                 System.Console.WriteLine("We sorry there is error on the creation of the card");
-                return new Card();
+                return lexer.Errors;
             }
         }
         public static List<Card> ReadDeck()

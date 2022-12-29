@@ -6,24 +6,51 @@
 
 <h3>Player: @CurrentPlayer.Name</h3>
 <h3>Money: @CurrentPlayer.Money</h3>
-<h4 class = "Left-Up">Turn: @turn  </h4>
+<p>@Message</p>
+<p>@MessegeAction</p>
+<p>My unit: @SelectedCardCamp.Name</p>
+<p>Other unit : @SelectedCardAction.Name</p>
+
+ <h3 class="Right-Up">Turn: @turn</h3>
+<p>Your field invocation is on the row 1 or 2</p>
+
 
 @if(Winner != "")
 {
-    <p class = "Head">Winner is @Winner</p>
+    <text-center class = "Head Up">Winner is @Winner</text-center>
 }
 
 <div class="Hand" style="height=(@height)px">
-@foreach (var card in cardModels)
-{
-    <Card CardModel = "card" Resize = "true" OnMouseUp="()=>MouseUp(card.card)"/>
-}
+    @foreach(var _card in CurrentPlayer.Hand)
+    {
+        CardModel cardmodel = new CardModel {card = _card, Opacity = _card.Conditions[0].Evaluate() > 0 };
+        height = CurrentPlayer.Hand.Count() * 100;
+        <Card CardModel = "cardmodel" Resize = "true" OnMouseOver="(()=>MouseOver(_card))" OnMouseClick="(()=>SelectCardHand(_card))"/>
+    }
 </div>
 
 <div class="Tab Tab_Picture">
     @foreach(var x in gridModels)
     {
+        string aux = "";
+        
         x.Card = Tab[x.Idx, x.Idy];
+
+        foreach(var y in NextPlayer.CampCards)
+        {
+            if(y.Name == x.Card.Name)
+            {
+                aux = "Enemy";
+            }
+        }
+        foreach(var y in CurrentPlayer.CampCards)
+        {
+            if(y.Name == x.Card.Name)
+            {
+                aux = "Ally";
+            }
+        }
+        x.Site = aux;
         @if(Tab[x.Idx,x.Idy].Name == "*")
         {
             x.IsInvisible = true;
@@ -32,18 +59,67 @@
         {
             x.IsInvisible = false;
         }
-        <Grid GridModel="x"  OnMouseUp="()=>MouseUp(x.Card)"/>
-    }
+      
+         <Grid GridModel="x"  OnMouseOver="(()=>MouseOver(x.Card))" OnMouseDClick="(()=>SelectCardAction(x.Card))" OnMouseClick="(()=>SelectCardCamp(x.Card))" OnMouseUp="(()=>Move(x.Card))" OnMouseDown="(()=>Invoke(x.Card))"/>   
+      
+     }
 </div>
 
  <div class="Showing">
  <Card CardModel = "@Show" Resize = "false" STYLE = "Bigger" />
+ @if(SelectedCardCamp.Name != "*")
+{
+        <div class="Powers">
+            <h2>Powers</h2>
+            <select style="height=50 width=50" @bind = "Option">
+                
+            @for(int i=0;i<SelectedCardCamp.Powers.Count();i++)
+            {
+                @if(i == 0)
+                    {
+                        <option value = "@(-1)"> @(-1)</option>
+                    }
+                    else
+                    {
+                          @if(SelectedCardCamp.Conditions[i].Evaluate() > 0 && SelectedCardCamp.Used[i] == false)
+                                {
+                                    <option value = "@i"> @i </option>
+                                }
+                    }
+                  
+            }
+            </select> 
+        </div>
+}
  </div>
+ 
+ <button @onclick="Change" type="button" class="UP btn">End Phase</button>
+ @if(OnSacrifice)
+{
+<select class="Up UP" style="height=70 width =70" @bind="@ReturnalCard">
+        @foreach(var c in Graveyard)
+        {
+            <option value = "@c.Name" >@c.Name</option>
+        }
+    </select>    
+}
+
+ @if(OnTrade)
+{
+<select class="Up UP" style="height=70 width =70" @bind="@SelectedPlayer">
+            <option value = "@CurrentPlayer.Name" >@CurrentPlayer.Name</option>
+            <option value = "@NextPlayer.Name">@NextPlayer.Name</option>
+    </select>    
+}
 
 
 
 @code
 {
+    public static bool OnSacrifice = false;
+    public static bool OnTrade = false;
+    public static string SelectedPlayer = "*";
+    public static string ReturnalCard = "*";
     public static int turn = -1;
     public static Player CurrentPlayer = new Player("");
     public static Player Player1 = new Player("");
@@ -64,7 +140,36 @@
     public static List<CardModel> cardModels { get; set; } = new List<CardModel>();
     public static int height;
     public static CardModel Show = new CardModel{id = 69,Opacity = true,card = new Card()};
-    Timer timer;
+    public static Card SelectedCardHand = new Card();
+    public static int InvokeCant = 0;
+    public static Card SelectedCardCamp = new Card();
+    public static bool OnPhase = false;
+    public static string MessegeAction = "";
+    public static Timer timer;
+    public static int Option = -1;
+
+    public static string Message = "";
+    public static Card SelectedCardAction = new Card();
+    public static bool OnAction = false;
+
+    private void SelectCardAction(Card card)
+    {
+        if (card.Name == "*")
+            return;
+        SelectedCardAction = card;
+    }
+    public static async Task Waitting()
+    {
+        SelectedCardAction=new Card();
+        while(SelectedCardAction.Name == "*")
+        {
+            if (OnSacrifice && ReturnalCard != "*")
+                break;
+            if (OnTrade && SelectedPlayer != "*")
+                break;
+            await Task.Delay(1000);  
+        }
+    }
 
     public void Dispose()
     {
@@ -72,40 +177,146 @@
             timer.Dispose();
     }
 
-    private void MouseUp(Card card)
+    private void MouseOver(Card card)
     {
         Show = new CardModel {id=100, Opacity = true, card = card };
-    
+
     }
-    private void TimerOnElapsed(Object sender,ElapsedEventArgs e)
+    private void SelectCardHand(Card card)
+    {       
+        if(InvokeCant == 0 && card.Conditions[0].Evaluate() > 0)
+            SelectedCardHand = card;
+    }
+    private void SelectCardCamp(Card card)
     {
+        if (OnAction) 
+            return;
+        if(card.Name == "*")
+            return;
+        foreach (var x in NextPlayer.CampCards)
+            if (x.Name == card.Name)
+                return;
+        System.Console.WriteLine(card.Name);
+        SelectedCardCamp = card;
+        Option = -1;
+    }
+    private void Invoke(Card position)
+    {
+        if(position.Name == "*" && SelectedCardHand.Name != "*")
+        {
+            if(Methods.Validate_Position(position.Posx, position.Posy, Tab, turn, true))
+            {
+                CurrentPlayer.Hand.Remove(SelectedCardHand);
+
+                Tab[position.Posx,position.Posy] = SelectedCardHand;
+                Tab[position.Posx, position.Posy].Posx = position.Posx;
+                Tab[position.Posx, position.Posy].Posy = position.Posy;
+                InvokeCant = 1;
+                CurrentPlayer.CampCards.Add(SelectedCardHand);
+
+                CurrentPlayer.Money -= SelectedCardHand.Cost;
+                Context.Save(CurrentPlayer.Name + ".Money", CurrentPlayer.Money);
+                Context.Save(CurrentPlayer.Name + ".Hand", CurrentPlayer.Hand.Count());
+                Context.Save(CurrentPlayer.Name + ".CampCards", CurrentPlayer.CampCards.Count());
+                Context.Save(SelectedCardHand.Name + ".Posx", SelectedCardHand.Posx);
+                Context.Save(SelectedCardHand.Name + ".Posy", SelectedCardHand.Posy);
+
+                StateHasChanged();
+            }
+        }
+        SelectedCardHand = new Card();
+    }
+    public void Move(Card NewPosition)
+    {
+
+        if (Methods.Distance(NewPosition.Posx,NewPosition.Posy,SelectedCardCamp.Posx,SelectedCardCamp.Posy) > SelectedCardCamp.Range)
+            return;
+        if (NewPosition.Name != "*")
+            return;
+        if (SelectedCardCamp.Moved)
+            return;
+
+        int newx = NewPosition.Posx;
+        int newy = NewPosition.Posy;
+        int posx = SelectedCardCamp.Posx;
+        int posy = SelectedCardCamp.Posy;
+
+        Context.Save(SelectedCardCamp.Name + ".Posx", newx);
+        Context.Save(SelectedCardCamp.Name + ".Posy", newy);
+
+        Tab[newx, newy] = SelectedCardCamp;
+        Tab[posx, posy] = new Card();
+
+        Tab[posx,posy].Posx = posx;
+        Tab[posx,posy].Posy = posy;
+
+        Tab[newx, newy].Posx = newx;
+        Tab[newx, newy].Posy = newy;
+        Tab[newx, newy].Moved = true;
         StateHasChanged();
     }
-    protected override async void OnInitialized()
-    {
-        timer = new Timer();
-        timer.Interval = 2000;
-        timer.Elapsed += TimerOnElapsed;
-        timer.Start();
 
+    private void Change()
+    {
+        OnPhase = false;
+        StateHasChanged();
+    }
+
+    private async Task FirstPhase()
+    {
+        OnPhase = true;
+        while(OnPhase)
+        {
+            await Task.Delay(10);
+        }
+    }
+    private async Task ActionTime()
+    {
+        StateHasChanged();
+        OnPhase = true;
+        foreach (var x in CurrentPlayer.CampCards)
+            for (int i = 0; i < x.Used.Count(); i++)
+                x.Used[i] = false;
+        while(OnPhase)
+        {
+            
+            if (Option != -1)
+            {
+                OnAction = true;
+                SelectedCardCamp.Powers[Option].Evaluate();
+                SelectedCardCamp.Used[Option] = true;
+                StateHasChanged();
+                Option = -1;
+                OnAction = false;
+                SelectedCardAction = new Card();
+            }
+            await Task.Delay(1000);
+        }
+    }
+
+    private async Task GameLoop()
+    {
         Context.Save(Player1.Name + ".Money", Player1.Money);
         Context.Save(Player2.Name + ".Money", Player2.Money);
         Context.Save(Player1.Name + ".Hand", Player1.Hand.Count());
         Context.Save(Player2.Name + ".Hand", Player2.Hand.Count());
         Context.Save(Player1.Name + ".CampCards", Player1.CampCards.Count());
         Context.Save(Player2.Name + ".CampCards", Player2.CampCards.Count());
-
+        
         // deck.Create_Card();
         // return;
-
-
+        
+        
+        Console.WriteLine("Here");
         deck = Deck.ReadDeck();
 
         for (int i = 0; i < 10; i++)
             for (int j = 0; j < 10; j++)
             {
                 Tab[i, j] = new Card();
-                gridModels.Add(new GridModel { Idx = i, Idy = j});
+                Tab[i, j].Posx = i;
+                Tab[i, j].Posy = j;
+                gridModels.Add(new GridModel { Card = Tab[i,j] ,Idx = j, Idy = i});
             }
 
         for (int i = 0; i < 3; i++)
@@ -116,7 +327,19 @@
 
 
         while (Methods.Continue(Player1) && Methods.Continue(Player2))
-        { 
+        {
+
+            
+            SelectedCardCamp = new Card();
+            for (int i = 0; i < 10; i++)
+                for (int j = 0; j < 10; j++)
+                {
+                    Tab[i, j].Moved = false;
+                }
+
+            gridModels = Enumerable.Reverse(gridModels).ToList();
+
+            InvokeCant = 0;
 
             Methods.ReadTab(Tab);
             if (turn != -1)
@@ -137,86 +360,93 @@
                 NextPlayer = Player2;
             }
 
-            cardModels = new List<CardModel>();
-            for(int z=0;z<CurrentPlayer.Hand.Count();z++)
+            Context.Save(CurrentPlayer.Name + ".Money", CurrentPlayer.Money);
+            Context.Save(NextPlayer.Name + ".Money", NextPlayer.Money);
+            Context.Save(CurrentPlayer.Name + ".Hand", CurrentPlayer.Hand.Count());
+            Context.Save(NextPlayer.Name + ".Hand", NextPlayer.Hand.Count());
+            Context.Save(CurrentPlayer.Name + ".CampCards", CurrentPlayer.CampCards.Count());
+            Context.Save(NextPlayer.Name + ".CampCards", NextPlayer.CampCards.Count());
+
+            if (deck.Count() == 0)
             {
-                cardModels.Add(new CardModel { id = z, card = CurrentPlayer.Hand[z], Opacity = CurrentPlayer.Hand[z].Conditions[0].Evaluate() > 0 });
+                Methods.EndGame();
+                break;
             }
-            height = 100 * CurrentPlayer.Hand.Count();
-            
+            System.Console.WriteLine("Your Money is  : " + CurrentPlayer.Money);
+            CurrentPlayer.Draw(deck, Methods.GetRandom(0, deck.Count() - 1));
 
-                Context.Save(CurrentPlayer.Name + ".Money", CurrentPlayer.Money);
-                Context.Save(NextPlayer.Name + ".Money", NextPlayer.Money);
-                Context.Save(CurrentPlayer.Name + ".Hand", CurrentPlayer.Hand.Count());
-                Context.Save(NextPlayer.Name + ".Hand", NextPlayer.Hand.Count());
-                Context.Save(CurrentPlayer.Name + ".CampCards", CurrentPlayer.CampCards.Count());
-                Context.Save(NextPlayer.Name + ".CampCards", NextPlayer.CampCards.Count());
-               
-                await Task.Delay(1000);
-                if (deck.Count() == 0)
-                {
-                    Methods.EndGame();
-                    break;
-                }
-                System.Console.WriteLine("Your Money is  : " + CurrentPlayer.Money);
-                CurrentPlayer.Draw(deck, Methods.GetRandom(0, deck.Count() - 1));
-                
-                if (TimeActions.Count() > 0)
-                {
-                    System.Console.WriteLine("Doing time actions");
-                    Methods.DoTimeActions();
-                }
+            if (TimeActions.Count() > 0)
+            {
+                System.Console.WriteLine("Doing time actions");
+                Methods.DoTimeActions();
+            }
 
-                while (CurrentPlayer.CardLim < CurrentPlayer.Hand.Count())
+            while (CurrentPlayer.CardLim < CurrentPlayer.Hand.Count())
+            {
+                Graveyard.Add(CurrentPlayer.Hand[0]);
+                CurrentPlayer.Hand.RemoveAt(0);
+            }
+            Available = CurrentPlayer.AvailableCards();
+            if (Available.Count() != 0)
+            {
+                foreach (var c in Available)
                 {
-                    Graveyard.Add(CurrentPlayer.Hand[0]);
-                    CurrentPlayer.Hand.RemoveAt(0);
+                    System.Console.WriteLine("Card : " + c);
+                    CurrentPlayer.Hand[c].ReadCard();
                 }
-                Available = CurrentPlayer.AvailableCards();
-                if (Available.Count() != 0)
-                {
-                    foreach (var c in Available)
-                    {
-                        System.Console.WriteLine("Card : " + c);
-                        CurrentPlayer.Hand[c].ReadCard();
-                    }
-                    x = y = -1;
+                x = y = -1;
 
+                if (CurrentPlayer is VirtualPlayer)
+                {
                     CurrentPlayer.Choose_Card();
-
-                    if (Selection != -1)
-                    {
-
-                        while (!Methods.Validate_Position(x, y, Tab, turn, true) || CurrentPlayer.Hand[Selection].Conditions[0].Evaluate() == 0)
-                        {
-                            CurrentPlayer.Choose_Position(true, turn);
-                        }
-
-                        CurrentPlayer.Money -= CurrentPlayer.Hand[Selection].Cost;
-                        Context.Save(CurrentPlayer.Name + ".Money", CurrentPlayer.Money);
-                        Tab[x, y] = CurrentPlayer.Hand[Selection];
-                        CurrentPlayer.CampCards.Add(CurrentPlayer.Hand[Selection]);
-                        CurrentPlayer.Hand.RemoveAt(Selection);
-                        CurrentPlayer.CampCards[CurrentPlayer.CampCards.Count() - 1].Posx = x;
-                        CurrentPlayer.CampCards[CurrentPlayer.CampCards.Count() - 1].Posy = y;
-                        Aux = CurrentPlayer.CampCards[CurrentPlayer.CampCards.Count() - 1];
-                        Context.Save(CurrentPlayer.Name + ".Camp", CurrentPlayer.CampCards.Count());
-                        Context.Save(CurrentPlayer.Name + ".Hand", CurrentPlayer.Hand.Count());
-                        Context.Save(Aux.Name + ".Posx", Aux.Posx);
-                        Context.Save(Aux.Name + ".Posy", Aux.Posy);
-                    }
+                    await Task.Delay(1000);
                 }
-                height = CurrentPlayer.Hand.Count() * 100;
-                System.Console.WriteLine();
-                System.Console.WriteLine("Moving Cards Camp");
-                for (int i = 0; i < CurrentPlayer.CampCards.Count(); i++)
+                else
                 {
-                    Methods.ReadTab(Tab);
-                    Aux = CurrentPlayer.CampCards[i];
-                    System.Console.WriteLine("You have to pay {0} by {1}", (Aux.Cost / 10), Aux.Name);
-                    CurrentPlayer.Money -= Aux.Cost / 10;
-                    System.Console.WriteLine("Actual money {0}", CurrentPlayer.Money);
+                    Message = "Waitting for invocation/moving";
+                    await FirstPhase();
+                }
+
+                Methods.ReadTab(Tab);
+
+                if (CurrentPlayer is VirtualPlayer && Selection != -1)
+                {
+
+                    while (!Methods.Validate_Position(x, y, Tab, turn, true) || CurrentPlayer.Hand[Selection].Conditions[0].Evaluate() == 0)
+                    {
+                        CurrentPlayer.Choose_Position(true, turn);
+                    }
+
+                    CurrentPlayer.Money -= CurrentPlayer.Hand[Selection].Cost;
                     Context.Save(CurrentPlayer.Name + ".Money", CurrentPlayer.Money);
+                    Tab[x, y] = CurrentPlayer.Hand[Selection];
+                    CurrentPlayer.CampCards.Add(CurrentPlayer.Hand[Selection]);
+                    CurrentPlayer.Hand.RemoveAt(Selection);
+                    CurrentPlayer.CampCards[CurrentPlayer.CampCards.Count() - 1].Posx = x;
+                    CurrentPlayer.CampCards[CurrentPlayer.CampCards.Count() - 1].Posy = y;
+                    Aux = CurrentPlayer.CampCards[CurrentPlayer.CampCards.Count() - 1];
+                    Context.Save(CurrentPlayer.Name + ".CampCards", CurrentPlayer.CampCards.Count());
+                    Context.Save(CurrentPlayer.Name + ".Hand", CurrentPlayer.Hand.Count());
+                    Context.Save(Aux.Name + ".Posx", Aux.Posx);
+                    Context.Save(Aux.Name + ".Posy", Aux.Posy);
+                    await Task.Delay(1000);
+                }
+            }
+
+            System.Console.WriteLine();
+            System.Console.WriteLine("Moving Cards Camp");
+            StateHasChanged();
+            for (int i = 0; i < CurrentPlayer.CampCards.Count(); i++)
+            {
+                Methods.ReadTab(Tab);
+                Aux = CurrentPlayer.CampCards[i];
+                System.Console.WriteLine("You have to pay {0} by {1}", (Aux.Cost / 10), Aux.Name);
+                CurrentPlayer.Money -= Aux.Cost / 10;
+                System.Console.WriteLine("Actual money {0}", CurrentPlayer.Money);
+                Context.Save(CurrentPlayer.Name + ".Money", CurrentPlayer.Money);
+               
+                if (CurrentPlayer is VirtualPlayer)
+                {
                     System.Console.WriteLine("Moving Card : ");
                     Aux.ReadCard();
                     do
@@ -243,37 +473,51 @@
                     {
                         Tab[x, y] = Aux;
                         Tab[Aux.Posx, Aux.Posy] = new Card();
+                        Tab[Aux.Posx, Aux.Posy].Posx = Aux.Posx;
+                        Tab[Aux.Posx, Aux.Posy].Posy = Aux.Posy;
+
                         Aux.Posx = x;
                         Aux.Posy = y;
                         System.Console.WriteLine("Card moved to " + CurrentPlayer.CampCards[i].Posx + " " + CurrentPlayer.CampCards[i].Posy);
                         Context.Save(Aux.Name + ".Posx", Aux.Posx);
                         Context.Save(Aux.Name + ".Posy", Aux.Posy);
                     }
-                    
                     await Task.Delay(1000);
-
+                }
+                if(CurrentPlayer is VirtualPlayer)
+                {
                     bool[] used = new bool[Aux.Powers.Count()];
                     Selection = -1;
                     do
                     {
                         System.Console.WriteLine(Aux.Description);
                         CurrentPlayer.Choose_Power(Aux, used);
-
+                    
                         if (Selection == -1)
                             break;
-
-                        if (Selection >= Aux.Conditions.Count() || Selection <= 0 || used[Selection])
-                            continue;
+                     
                         used[Selection] = true;
                         if (Aux.Conditions[Selection].Evaluate() > 0)
                             Aux.Powers[Selection].Evaluate();
                         else System.Console.WriteLine("Power no available");
                         
-                       
+
                     } while (Selection != -1);
-                  
+                    await Task.Delay(1000);
                 }
+                
             }
+            if(!(CurrentPlayer is VirtualPlayer))
+                {
+         
+                    Message = "Waitting for actions";           
+                    await ActionTime();
+                    StateHasChanged();
+                }
         }
-    
+    }
+    protected override async void OnInitialized()
+    {
+        await GameLoop();
+    }
 }

@@ -7,6 +7,7 @@
         public int id { get; set; }
         public string Style { get; set; }
         public bool opacity { get; set; }
+
         public bool Opacity 
         { get => opacity;
 

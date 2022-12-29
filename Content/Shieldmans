@@ -7,3 +7,4 @@ Range=1
 Description= 1 - To Attack 2 - Increasies defense on 5 by decreasies attack 10
 Powers = ToAttack | UpAttack(-10) UpDefense(5)|
 Conditions = MyMoney > 20 | 1 | 1 |
+Picture = ../Img/escuderos.jpg

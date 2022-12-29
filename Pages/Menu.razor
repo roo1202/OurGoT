@@ -2,7 +2,7 @@
 @page "/"
 
 
-<p class = "Head"> Game of Thrones </p>
+<img src = "../Img/got.jpg" class = "Head">
 <div class="Menu">
 <h3>Choose Players</h3>
 <select @bind = "players">
@@ -12,7 +12,7 @@
 
 @if(players=="human")
 {
-    <input @bind-value = "name">
+    <input @bind-value = "name" placeholder ="Name" @onkeyup="Enter">
 }
 
 <button @onclick = "Players">
@@ -30,17 +30,23 @@
 @if(Play.Player1.Name != "" && Play.Player2.Name != "")
     {
         <a class = "fcc-btn" href="/Play">
-        Play
+            Play
         </a>
     }
-
+        
 </div>
-
+<a class = "fcc-btn Right Down" href="/CreateCard">
+            Create Card
+ </a>
 @code
 {
     public string players="" ;
     public string name = "";
-
+    public void Enter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter")
+            Players();
+    }
     public void Players()
     {
         string [] Playeres = {"Robert_Barathyon","Daenerys","Cersei","Joffrey","Thom","Jon_Snow"};

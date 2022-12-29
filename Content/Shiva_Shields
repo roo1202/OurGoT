@@ -7,3 +7,4 @@ Life = 5
 Description = 1 - It ups a defense's card
 Powers = UpDefense(15) Heal(-5) |
 Conditions = MyMoney > 15 | 1 |
+Picture = ../Img/esc.jpg
